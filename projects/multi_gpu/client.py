@@ -85,7 +85,7 @@ def main(prefix, njobs, host='localhost', port=8000):
     files = find_pdf_files(folder_path)
     
     # Print found PDF files
-    logger.info(f"Found {len(files)} PDF files")
+    logger.info(f"==========Found {len(files)} PDF files==========")
 
     n_jobs = np.clip(len(files), 1, njobs)
     results = Parallel(n_jobs, prefer='processes', verbose=10)(
@@ -93,7 +93,7 @@ def main(prefix, njobs, host='localhost', port=8000):
     )
 
     # Create output directories if they don't exist
-    save_dir = os.path.join('/home/zhengx46', 'process_data')
+    save_dir = os.path.join('/home/zhengx46', 'RDR_232_MM_Ref')
     os.makedirs(save_dir, exist_ok=True)
     
     # Save results and all_files
@@ -101,6 +101,19 @@ def main(prefix, njobs, host='localhost', port=8000):
         pickle.dump(results, f)
 
     logger.info(f"Saved results to {save_dir}")
+
+    # To back up in pstore (ps storage space)
+    save_dir = os.path.join('/pstore/data/llm-comptox/Input', 'RDR_232_MM_Ref')
+    os.makedirs(save_dir, exist_ok=True)
+    
+    # Save results and all_files
+    with open(os.path.join(save_dir, str(prefix)+'_results.pkl'), 'wb') as f:
+        pickle.dump(results, f)
+
+    logger.info(f"Saved backup results to {save_dir}")
+
+
+    logger.info("==========All Client Jobs are Done==========")
     print(results)
 
 

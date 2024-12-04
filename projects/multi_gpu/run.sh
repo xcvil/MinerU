@@ -1,19 +1,20 @@
 #!/bin/bash
 #BSUB -q long
-#BSUB -n 4                           # Number of cores
+#BSUB -n 8                           # Number of cores
 #BSUB -o ./lsf_log/gpu_job_%J.out              # Output file name (%J is the job ID)
 #BSUB -e ./lsf_log/gpu_job_%J.err              # Error file name
-#BSUB -gpu num=3:gmem=80000:mode=shared
+#BSUB -gpu num=2:gmem=80000:mode=shared
 #BSUB -R "rusage[mem=64GB]"          # Memory requirement (specify amount needed)
 #BSUB -W 24:00                        # Wall clock limit (hours:minutes)
 
 # Define the variables
-export OUTPUT_DIR="part_2"    # Change this value as needed
-export DEVICES=3              # Change this value as needed
-export WORKERS_PER_DEVICE=6   # Change this value as needed
-export PORT=8088             # Change this value as needed
+export PREFIX="part_3"    
+export DEVICES=2              
+export WORKERS_PER_DEVICE=8   
+export PORT=6000             
 # Calculate N_JOBS
 export N_JOBS=$((DEVICES * WORKERS_PER_DEVICE))
+export OUTPUT_DIR="/pstore/data/llm-comptox/Input/RDR_232_MM/${PREFIX}"
 
 source /home/zhengx46/.bashrc
 conda activate parser
@@ -26,7 +27,4 @@ sleep 300
 nvidia-smi
 
 # Run client
-python client.py --prefix ${OUTPUT_DIR} --n-jobs ${N_JOBS} --port ${PORT}
-
-
-echo "==========All Client Jobs are Done=========="
+python client.py --prefix ${PREFIX} --n-jobs ${N_JOBS} --port ${PORT}
