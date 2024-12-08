@@ -131,7 +131,7 @@ if __name__ == '__main__':
     # server.run(port=8000)
 
     server = ls.LitServer(
-        MinerUAPI(output_dir=f'/home/zhengx46/attritiondata/{args.output_dir}'),
+        MinerUAPI(output_dir=args.output_dir),
         accelerator=args.accelerator,
         devices=args.devices,
         workers_per_device=args.workers_per_device,
